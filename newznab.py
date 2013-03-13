@@ -72,18 +72,13 @@ def runCommand(command):
 	return out, err
 
 def installPackages():
-	try:
-		out = runCommand('stat -c %y /var/lib/apt/periodic/update-success-stamp')
-		print 'Your repository was last updated on %s, do you want to update now?' % out.split(' ')[0]
-		reply = raw_input('(Y/N?) ').lower()
-		if 'y' in reply:
-			runCommand('apt-get update')
-	except:
-		pass
+	print 'Updating apt repositories...'
+	runCommand('apt-get update -q=3')
+		
 	print 'Installing newznab dependencies...'
 	commands = ['apt-get install -y -q=3 build-essential checkinstall', 'mkdir -p /var/www/newznab', 'chmod 777 /var/www/newznab', 'apt-get install -y -q=3 php5',
 		'apt-get install -y -q=3 php5-dev', 'apt-get install -y -q=3 php-pear',	'apt-get install -y -q=3 php5-gd', 'apt-get install -y -q=3 php5-mysql',
-		'apt-get install -y -q=3 php5-curl', 'DEBIAN_FRONTEND=noninteractive apt-get -y install -q=3 mysql-server', 'apt-get -y install -q=3 git',
+		'apt-get install -y -q=3 php5-curl', 'DEBIAN_FRONTEND=noninteractive apt-get -y install -q=3 mysql-server', 'apt-get -y install -q=3 git', 'apt-get -y install -q=3 php5-fpm',
 		'apt-get -y install -q=3  mysql-client libmysqlclient-dev', 'apt-get -y install -q=3 apache2', 'a2dissite default', 'a2ensite newznab', 'a2enmod rewrite',
 		'service apache2 restart', 'apt-get -y install -q=3 python-software-properties', 'add-apt-repository -y  ppa:jon-severinsson/ffmpeg',
 		'add-apt-repository -y  ppa:shiki/mediainfo', 'apt-get -y install -q=3 subversion']
