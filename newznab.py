@@ -69,9 +69,17 @@ def runCommand(command):
 	process = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 	out, err = process.communicate()
 	#do whatever we want with out and err here
-
+	return out, err
 
 def installPackages():
+	try:
+		out = runCommand('stat -c %y /var/lib/apt/periodic/update-success-stamp')
+		print 'Your repository was last updated on %s, do you want to update now?' % out.split(' ')[0]
+		reply = raw_input('(Y/N?) ').lower()
+		if 'y' in reply:
+			runCommand('apt-get update')
+	except:
+		pass
 	print 'Installing newznab dependencies...'
 	commands = ['apt-get install -y -q=3 build-essential checkinstall', 'mkdir -p /var/www/newznab', 'chmod 777 /var/www/newznab', 'apt-get install -y -q=3 php5',
 		'apt-get install -y -q=3 php5-dev', 'apt-get install -y -q=3 php-pear',	'apt-get install -y -q=3 php5-gd', 'apt-get install -y -q=3 php5-mysql',
