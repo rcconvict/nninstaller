@@ -199,7 +199,7 @@ def installTmux():
 	if 'y' in reply or 'yes' in reply:
 		runCommand('apt-get install -y -q=3 php-apc')
 		try:
-		shutil.copy('/usr/share/doc/php-apc/apc.php', '/var/www/newznab/www/admin/apc.php')
+			shutil.copy('/usr/share/doc/php-apc/apc.php', '/var/www/newznab/www/admin/apc.php')
 		except IOError:
 			print 'Unable to copy apc.php to newznab install.'	
 
