@@ -50,7 +50,7 @@ def systemCheck():
 	if not os.geteuid() == 0:
 		sys.exit('You must be root to run this application')
 	if dist()[1] != '12.10':
-		print '\033[1;31mTHIS HAS NOT BEEN TESTED ON ANY OTHER VERSION OF UBUNTU AND REQUIRES APT-GET. RUN AT YOUR OWN RISK. YOU HAVE BEEN WARNED\033[1;37m'
+		print '\033[1;31mTHIS HAS NOT BEEN TESTED ON ANY OTHER VERSION OF UBUNTU OTHER THAN 12.10 AND REQUIRES APT-GET. RUN AT YOUR OWN RISK. YOU HAVE BEEN WARNED\033[1;37m'
 	if '.'.join(map(str, sys.version_info[:3])) != '2.7.3':
 		print '\033[1;31mTHIS HAS ONLY BEEN TESTED ON PYTHON VERSION 2.7.3. RUN AT YOUR OWN RISK. YOU HAVE BEEN WARNED\033[1;37m'
 
@@ -105,7 +105,7 @@ def installPackages():
 def installSphinx():
 	reply = raw_input('Do you want to install sphinx? (Y/N) ').lower()
 	if 'y' in reply or 'yes' in reply:
-		commands = ['add-apt-repository -y ppa:builds/sphinxsearch-stable', 'apt-get -q=3 update', 'apt-get install -y -q=3 sphinxsearch']
+		commands = ['apt-get install -y -q=3 sphinxsearch']
 		progress = toolbar(len(commands))
 		for command in commands:
 			runCommand(command)
@@ -175,6 +175,18 @@ def modifySystem():
 	progress.end()
 
 def installTmux():
+	reply = raw_input('Do you want to install dependencies for jonnyboy\'s scripts? (Y/N) ').lower()
+	if 'y' in reply or 'yes' in reply:
+		packages = ['tmux', 'mytop', 'nmon', 'htop', 'bwmng', 'vnstat', 'atop', 'iotop', 'iftop']
+		print 'Installing newznab dependencies...'
+	
+		progress = toolbar(len(packages))
+		for command in commands:
+			runCommand('apt-get -y install -q=3 %s' % command)
+			progress.update()
+	
+		progress.end()
+
 	reply = raw_input('Do you want to install jonnyboy\'s tmux scripts? (Y/N) ').lower()
 	if 'y' in reply or 'yes' in reply:
 		runCommand('git clone https://github.com/jonnyboy/newznab-tmux.git /var/www/newznab/misc/update_scripts/nix_scripts/tmux')
@@ -182,9 +194,12 @@ def installTmux():
 			shutil.move('/var/www/newznab/misc/update_scripts/nix_scripts/tmux/config.sh', '/var/www/newznab/misc/update_scripts/nix_scripts/tmux/defaults.sh')
 		except IOError:
 			print 'Unable to copy tmux config.sh to defaults.sh.'
+
+	reply = raw_input('Do you want to install php-apc caching package? (Y/N) ').lower()
+	if 'y' in reply or 'yes' in reply:
 		runCommand('apt-get install -y -q=3 php-apc')
 		try:
-			shutil.copy('/usr/share/doc/php-apc/apc.php', '/var/www/newznab/www/admin/apc.php')
+		shutil.copy('/usr/share/doc/php-apc/apc.php', '/var/www/newznab/www/admin/apc.php')
 		except IOError:
 			print 'Unable to copy apc.php to newznab install.'	
 
