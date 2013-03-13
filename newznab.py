@@ -14,14 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from time import sleep
-import platform
 import os, sys
-import subprocess
-import shutil
-import urllib2
+from time import sleep
+from platform import dist
 from getpass import getpass
+import subprocess, shutil, urllib2
 
 '''	 __________________
 	< Thanks to zombu2 >
@@ -52,7 +49,7 @@ class toolbar():
 def systemCheck():
 	if not os.geteuid() == 0:
 		sys.exit('You must be root to run this application')
-	if platform.dist()[1] != '12.10':
+	if dist()[1] != '12.10':
 		print '\033[1;31mTHIS HAS NOT BEEN TESTED ON ANY OTHER VERSION OF UBUNTU AND REQUIRES APT-GET. RUN AT YOUR OWN RISK. YOU HAVE BEEN WARNED\033[1;37m'
 	if '.'.join(map(str, sys.version_info[:3])) != '2.7.3':
 		print '\033[1;31mTHIS HAS ONLY BEEN TESTED ON PYTHON VERSION 2.7.3. RUN AT YOUR OWN RISK. YOU HAVE BEEN WARNED\033[1;37m'
@@ -119,7 +116,9 @@ def installSphinx():
 		print 'Skipping sphinx.'
 	
 def installFree():
-	commands = ['apt-get -q=3 update', 'apt-get -y install -q=3 ffmpeg', 'apt-get -y install -q=3 x264', 'apt-get -y install -q=3 mediainfo', 'apt-get -y install -q=3 unrar', 'apt-get -y install -q=3 lame']
+	commands = ['apt-get -q=3 update', 'apt-get -y install -q=3 ffmpeg', 'apt-get -y install -q=3 x264',
+		'apt-get -y install -q=3 mediainfo', 'apt-get -y install -q=3 unrar', 'apt-get -y install -q=3 lame']
+
 	reply = raw_input('Do you want to install post processing utilities? (Y/N) ').lower()
 	if 'y' in reply or 'yes' in reply:
 		print 'Installing ffmpeg x264 mediainfo unrar lame...'
@@ -137,7 +136,8 @@ def installNewznab():
 	print 'Installing Newznab...'
 	username = raw_input('Enter the newznab-plus SVN username: ')
 	password = getpass('Enter the newznab-plus SVN password: ')
-	commands = ['svn co svn://svn.newznab.com/nn/branches/nnplus /var/www/newznab --no-auth-cache --non-interactive --username %s --password %s' % (username, password), 'chmod -R 777 /var/www/newznab']
+	commands = ['svn co svn://svn.newznab.com/nn/branches/nnplus /var/www/newznab --no-auth-cache \
+		--non-interactive --username %s --password %s' % (username, password), 'chmod -R 777 /var/www/newznab']
 	progress = toolbar(len(commands))
 	for i in xrange(len(commands)):
 		runCommand(commands[i])
