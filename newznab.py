@@ -177,7 +177,7 @@ def modifySystem():
 def installTmux():
 	reply = raw_input('Do you want to install dependencies for jonnyboy\'s scripts? (Y/N) ').lower()
 	if 'y' in reply or 'yes' in reply:
-		packages = ['tmux', 'mytop', 'nmon', 'htop', 'bwmng', 'vnstat', 'atop', 'iotop', 'iftop']
+		commands = ['tmux', 'mytop', 'nmon', 'htop', 'bwmng', 'vnstat', 'atop', 'iotop', 'iftop']
 		print 'Installing newznab dependencies...'
 	
 		progress = toolbar(len(packages))
